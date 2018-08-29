@@ -1,0 +1,21 @@
+Host playground-bastion
+  Hostname 54.168.66.12
+  User ec2-user
+  StrictHostKeyChecking=no
+
+Host playground-web
+  Hostname ipaddress
+  User ubuntu
+  StrictHostKeyChecking=no
+  ProxyCommand ssh -W %h:%p playground-bastion
+
+Host production-bastion
+  Hostname 52.197.15.51
+  User ubuntu
+  StrictHostKeyChecking=no
+
+Host production-web
+  Hostname ipaddress
+  User ubuntu
+  StrictHostKeyChecking=no
+  ProxyCommand ssh -W %h:%p production-bastion
