@@ -1,7 +1,7 @@
 environment: &environment
   environment:
     BUCKET_NAME: ''
-    PLAYGROUND_BUCKET_NAME: ''
+    PLAYGROUND_BUCKET_NAME: 'cw-to-slack-manabe-test'
     WEBHOOK_URL: ''
     PLAYGROUND_WEBHOOK_URL: ''
 
@@ -41,7 +41,7 @@ jobs:
       - *setup-aws
       - run: ls -al
       - run: ls -al node_modules
-#      - run: aws cloudformation package --s3-bucket $BUCKET_NAME --template-file template.yml --output-template-file template.sam.yml`
+      - run: aws cloudformation package --s3-bucket $PLAYGROUND_BUCKET_NAME --template-file template.yml --output-template-file template.sam.yml
 #      - run: aws cloudformation create-change-set --parameter-overrides "WebhookURL=${WEBHOOK_URL}" --template-file template.sam.yml --stack-name cw-to-slack --capabilities CAPABILITY_IAM`
 #
 #  approve:
