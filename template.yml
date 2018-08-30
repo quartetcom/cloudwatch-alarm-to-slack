@@ -16,6 +16,7 @@ Resources:
       Runtime: 'nodejs6.10'
       MemorySize: 512
       Timeout: 30
+      CodeUri: .
       Environment:
         Variables:
           WEBHOOK_URL: !Ref WebhookURL
