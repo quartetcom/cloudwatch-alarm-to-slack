@@ -6,6 +6,7 @@ Parameters:
   WebhookURL:
     Description: 'Slack incoming webhook URL'
     Type: String
+    Default: 'https://hooks.slack.com/services/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'
 Resources:
   Topic:
     Type: 'AWS::SNS::Topic'
