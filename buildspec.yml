@@ -1,0 +1,15 @@
+version: 0.1
+phases:
+  install:
+    commands:
+      - npm install
+      - aws cloudformation package --template-file template.yml --s3-bucket cw-to-slack-manabe-test --output-template-file template.sam.yml
+#      - npm install time
+#      - aws cloudformation package --template-file samTemplate.yaml --s3-bucket cw-to-slack-manabe-test --output-template-file outputSamTemplate.yaml
+artifacts:
+  type: zip
+  files:
+    - template.yml
+    - template.sam.yml
+#    - samTemplate.yaml
+#    - outputSamTemplate.yaml

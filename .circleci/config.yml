@@ -1,0 +1,80 @@
+#environment: &environment
+#  environment:
+#    BUCKET_NAME: ''
+#    PLAYGROUND_BUCKET_NAME: 'cw-to-slack-manabe-test'
+#    WEBHOOK_URL: ''
+#    PLAYGROUND_WEBHOOK_URL: ''
+#
+#setup-aws: &setup-aws
+#  run:
+#    name: Setup AWS credentials
+#    command: |
+#      mkdir -p ~/.aws
+#      printf "[playground]\nregion = ap-northeast-1\n" >> ~/.aws/config
+#      printf "[playground]\naws_access_key_id = ${PLAYGROUND_AWS_ACCESS_KEY_ID}\naws_secret_access_key = ${PLAYGROUND_AWS_SECRET_ACCESS_KEY}\n" >> ~/.aws/credentials
+#      printf "[prod]\nregion = ap-northeast-1\n" >> ~/.aws/config
+#      printf "[prod]\naws_access_key_id = ${AWS_ACCESS_KEY_ID}\naws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}\n" >> ~/.aws/credentials
+#      chmod 600 ~/.aws/*
+#      cat ~/.aws/credentials
+#      cat ~/.aws/config
+#
+#version: 2
+#jobs:
+#  prepare:
+#    docker:
+#      - image: node:6.10
+#    steps:
+#      - checkout
+#      - run: npm install
+#      - persist_to_workspace:
+#          root: . # workspaceのrootパス（絶対パスかworking_directoryからの相対パス）
+#          paths:
+#            - . # 共有するパス（絶対パスかrootからの相対パス）
+#
+#  create_changeset:
+#    docker:
+#      - image: quartetcom/ci-pack:latest
+#    <<: *environment
+#    steps:
+#      - attach_workspace: # workspaceをアタッチする
+#          at: .
+#      - *setup-aws
+#      - run: ls -al
+#      - run: ls -al node_modules
+#      - run: aws cloudformation package --s3-bucket $PLAYGROUND_BUCKET_NAME --template-file template.yml --output-template-file template.sam.yml
+##      - run: aws cloudformation create-change-set --parameter-overrides "WebhookURL=${WEBHOOK_URL}" --template-file template.sam.yml --stack-name cw-to-slack --capabilities CAPABILITY_IAM`
+##
+##  approve:
+##
+##  deploy:
+##    docker:
+##      - image: quartetcom/ci-pack:latest
+##    <<: *environment
+##    steps:
+##      - run: aws cloudformation execute-change-set
+#
+#workflows:
+#  version: 2
+#  release:
+#    jobs:
+#      - prepare
+#      - create_changeset:
+#          requires:
+#            - prepare
+##      - build_ec2:
+##          requires:
+##            - test
+##          filters:
+##            branches:
+##              only:
+##                - master
+##                - release
+##      - provision:
+##          requires:
+##            - build_ec2
+##      - deploy:
+##          requires:
+##            - provision
+##      - switch_instance:
+##          requires:
+##            - deploy
